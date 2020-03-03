@@ -1,0 +1,49 @@
+---
+title: "New Class Enrollment"
+author: "Rebecca Xi"
+date: "3/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(gt)
+```
+
+```{r download_data, include=FALSE}
+
+# download.file() glitching with PC
+
+'url_current <- "https://registrar.fas.harvard.edu/files/fas-registrar/files/class_enrollment_summary_by_term_2.25.20_0.xlsx"
+
+url_old <- "https://registrar.fas.harvard.edu/files/fas-registrar/files/class_enrollment_summary_by_term_3.22.19_0.xlsx"
+
+download.file(url = "https://registrar.fas.harvard.edu/files/fas-registrar/files/class_enrollment_summary_by_term_2.25.20_0.xlsx", 
+              destfile = "current.xlsx")
+
+download.file(url = url_old, 
+              destfile = "old.xlsx")'
+
+
+spring2020 <- read_excel("class_enrollment_summary_by_term_2.25.20_0.xlsx",
+                         skip = 3) %>% 
+  clean_names() %>% 
+  filter(! is.na(course_name))
+
+spring2019 <- read_excel("class_enrollment_summary_by_term_3.22.19_0.xlsx",
+                         skip = 3) %>% 
+  clean_names() %>% 
+  filter(! is.na(course_name)) %>% 
+  select(course_id)
+
+compare <- spring2020 %>% 
+  anti_join(spring2019, by = "course_id")
+
+compare
+
+```
+
