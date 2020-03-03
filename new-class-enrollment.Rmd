@@ -41,9 +41,22 @@ spring2019 <- read_excel("class_enrollment_summary_by_term_3.22.19_0.xlsx",
   select(course_id)
 
 compare <- spring2020 %>% 
-  anti_join(spring2019, by = "course_id")
+  anti_join(spring2019, by = "course_id") %>% 
+  arrange(desc(total)) %>% 
+  slice(1:5)
+```
 
-compare
+```{r}
+
+compare %>% 
+  select(course_id, course_title, course_name, course_department, instructor_full_name, total) %>% 
+  rename("Course ID" = course_id,
+         "Course Title" = course_title,
+         "Course Name" = course_name,
+         "Course Department" = course_department,
+         "Instructor" = instructor_full_name,
+         "Total Enrollment" = total) %>% 
+  gt() 
 
 ```
 
